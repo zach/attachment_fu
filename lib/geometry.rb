@@ -1,7 +1,8 @@
-# This Geometry class was yanked from RMagick.  However, it lets ImageMagick handle the actual change_geometry.
+# This image geometry class was yanked from RMagick.  However, it lets ImageMagick handle the actual change_geometry.
 # Use #new_dimensions_for to get new dimensons
 # Used so I can use spiffy RMagick geometry strings with ImageScience
-class Geometry
+# Renamed from Geometry to avoid conflict with GeoRuby, which understandably has a Geometry class itself
+class ImageGeometry
   # ! and @ are removed until support for them is added
   FLAGS = ['', '%', '<', '>']#, '!', '@']
   RFLAGS = { '%' => :percent,
@@ -13,7 +14,7 @@ class Geometry
   attr_accessor :width, :height, :x, :y, :flag
 
   def initialize(width=nil, height=nil, x=nil, y=nil, flag=nil)
-    # Support floating-point width and height arguments so Geometry
+    # Support floating-point width and height arguments so ImageGeometry
     # objects can be used to specify Image#density= arguments.
     raise ArgumentError, "width must be >= 0: #{width}"   if width < 0
     raise ArgumentError, "height must be >= 0: #{height}" if height < 0
@@ -86,8 +87,8 @@ class Array
   #   [50, 64] / '40>' # => [40, 51]
   def /(geometry)
     raise ArgumentError, "Only works with a [width, height] pair" if size != 2
-    raise ArgumentError, "Must pass a valid geometry string or object" unless geometry.is_a?(String) || geometry.is_a?(Geometry)
-    geometry = Geometry.from_s(geometry) if geometry.is_a?(String)
+    raise ArgumentError, "Must pass a valid geometry string or object" unless geometry.is_a?(String) || geometry.is_a?(ImageGeometry)
+    geometry = ImageGeometry.from_s(geometry) if geometry.is_a?(String)
     geometry.new_dimensions_for first, last
   end
 end
